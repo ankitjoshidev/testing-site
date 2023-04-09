@@ -1,0 +1,87 @@
+<%-include('partials/footer');-%>
+<title>Login Form</title>
+  <style>
+    body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  }
+  
+  h1 {
+  text-align: center;
+  margin-top: 50px;
+  }
+  
+  form {
+  width: 400px;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  }
+  
+  button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 16px;
+  }
+  
+  button[type="submit"]:hover {
+  background-color: #3e8e41;
+  }
+  </style>
+  <body>
+    <h1>Login Form</h1>
+    <form id="login" action="/login" method="post">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div>
+        <button type="submit">Login</button>
+        <button type="submit"><a href="/" class="text-decoration-none text-white">Back</a></button>
+      </div>
+    </form>
+  </body>
+  <script>
+    $( document ).ready(function() {
+      console.log( "ready!" );
+      var message = "<%= message  %>" 
+      var success = "<%= success  %>" 
+      if(message.length>0){
+        if(success == true){
+          alertify.success(message);
+        } else {
+          alertify.error(message);
+        }
+      }
+  });
+  </script>
+
+
+  

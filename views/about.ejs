@@ -1,0 +1,55 @@
+<%-include('partials/navbar');-%>
+<title>About</title>
+<style>
+.feedback-card{
+ margin-top: 40px;
+}
+.feedback-comment-btn{
+ margin-top: 20px;
+}
+.feedback-input-field{
+ width: 50% !important;
+}
+.commenter-image {
+ border-radius: 50%;
+ width: 50px;
+ height: 50px;
+ object-fit: cover;
+}
+</style>
+<body>
+ <div class="container-fluid">
+ <div class="card feedback-card">
+ <div class="card-header">
+ <h5 class="card-title">Client's Feedback</h5>
+ </div>
+ <div class="card-body">
+ <ul>
+ <% for (var i = 0; i < feedback.length; i++) { %>
+ <img src="<%= feedback[i].image %>" class="commenter-image">
+ <h5 class="card-text"><%= feedback[i].name %></h5>
+ <h6 class="card-text"><%= feedback[i].feedback %></h6><br/>
+ <% } %>
+ </ul>
+ <form action="/add-client-comment" method="GET">
+ <div class="form-group">
+ <label for="comment">Feedback:</label>
+ <textarea class="form-control feedback-input-field" id="comment" name="comment" rows="3" required></textarea>
+ </div>
+ <button type="submit" class="btn btn-primary feedback-comment-btn">Submit</button>
+ </form>
+ 
+ </div>
+ <div class="card-footer text-muted">
+ 
+ </div>
+ </div>
+ </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$( document ).ready(function() {
+window.scrollTo(0,document.body.scrollHeight);
+  });
+</script>
+<%-include('partials/footer');-%>

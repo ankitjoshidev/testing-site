@@ -1,0 +1,170 @@
+<%-include('partials/footer');-%>
+<title>Dashboard</title>
+<style>
+button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.content {
+        margin-left: 200px;
+        padding: 20px;
+}
+#flip-button {
+    position: absolute;
+    top: 10px;
+    left: 1200px;
+    width: 8%;
+    z-index: 1;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+label {
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+button[type="submit"]:hover {
+  background-color: #0f882b;
+}
+.add-item-btn{
+    margin: 350px 700px;
+    width: 110px;
+}
+
+</style>
+<%-include('partials/sidebar');-%>
+<div class="content">
+    <h1>Welcome <%= username %></h1>
+    <% if (page=="items") { %>
+      <button type="submit" id="flip-button"></button>
+    <% } %>
+    <% if (flip) { %>
+      <div id="front">
+        <% if(page=="items"){ %>
+          <h4>Items</h4>
+          <table id="itemTable" class="dataTables">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Name</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% data.forEach(function(row) { %>
+                <tr>
+                  <td><%= row.category %></td>
+                  <td><%= row.name %></td>
+                  <td><%= row.quantity %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } else{ %>  
+          <h4>Feedback</h4>
+          <table id="commentTable" class="dataTables">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Feedback</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% data.forEach(function(row) { %>
+                <tr>
+                  <td><%= row.name %></td>
+                  <td><%= row.email %></td>
+                  <td><%= row.feedback %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+       <% } %>
+      </div>
+      <div id="back" style="display:none;">
+        <% if(page=="items"){ %>
+          <form id="item-form">
+            <label for="category">Item Category:</label>
+            <input type="text" id="category" name="category" required>
+          
+            <label for="name">Item Name:</label>
+            <input type="text" id="name" name="name" required>
+          
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" required>
+            <button id="add_item_btn" class="add-item-btn" type="submit">Add Item</button>
+          </form>
+        <% } %>
+      </div>
+    <% } %>
+    <form method="POST" action="/logout">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+<script>
+      $(document).ready(function() {
+        $('#itemTable').DataTable({});
+        $('#commentTable').DataTable({});
+  function deleteUser(id) {
+  // Add your delete logic here
+}
+        $('#flip-button').text("Add Item");
+        $("#flip-button").click(function(){
+          var front = document.getElementById("front");
+          var back = document.getElementById("back");
+          if (front.style.display === "none") {
+            front.style.display = "block";
+            back.style.display = "none";
+            $('#flip-button').text("Add Item");
+          } else {
+            front.style.display = "none";
+            back.style.display = "block";
+            $('#flip-button').text("Get Items");
+        }
+  });
+        $('#add_item_btn').click(function() {
+          debugger
+          if(!$("#item-form")[0].checkValidity()){
+            console.log("adfalsd")
+          } else {
+            let category = document.getElementById("category").value;
+            let name = document.getElementById("name").value;
+            let quantity = document.getElementById("quantity").value;
+        $.post('/add-item', { category: category, name: name, quantity: quantity })
+        .then(response => response.json())
+        .then(data => {
+          category.innerHTML();
+          name.innerHTML();
+          quantity.innerHTML();
+          location.reload();
+        })
+        .catch(error => console.error(error));
+          }
+    });
+  });
+</script>
