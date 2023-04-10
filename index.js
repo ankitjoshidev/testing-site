@@ -51,7 +51,7 @@ var userProfile;
 app.use(passport.initialize());
 app.use(passport.session());
 let feedback = [
-  {name:"Ankit Joshi", feedback: "Very coperative and perfect service", image: 'https://lh3.googleusercontent.com/a/AGNmyxZgZARrA6EcEsHtCt3JkGMIYRHjvM83HYDPAiHUpw=s96-c'}
+  {name:"Ankit Joshi", feedback: "My First website!!", image: 'https://lh3.googleusercontent.com/a/AGNmyxZgZARrA6EcEsHtCt3JkGMIYRHjvM83HYDPAiHUpw=s96-c'}
 ]
 let feedback_message
 app.set('view engine', 'ejs');
@@ -175,7 +175,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 passport.use(new GoogleStrategy({
  clientID: '268356325427-p6nrol1dp5pqm2np42bf78dtvb8or9uc.apps.googleusercontent.com',
  clientSecret: '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',
- callbackURL: "http://localhost:3000/auth/google/callback"
+ callbackURL: "https://sample-project-ejs.onrender.com/auth/google/callback"
   },
  function(accessToken, refreshToken, profile, done) {
  userProfile=profile;
