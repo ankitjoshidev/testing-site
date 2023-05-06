@@ -1,5 +1,5 @@
 
 module.exports.development = {
   dialect: 'sqlite',
-  storage: './dev-database.sqlite3',
+  storage: './db.db',
 };
