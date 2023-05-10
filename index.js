@@ -1,19 +1,40 @@
 const express = require('express');
-const ejs = require('ejs');
 const path = require("path");
 const app = express();
 const jwt = require('jsonwebtoken');
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
 const sessions = require('express-session');
+const passport = require('passport');
 const oneDay = 1000 * 60 * 60 * 24;
 global.appRoot = path.resolve(__dirname);
 const dbService = require('./db/db.service');
 const DB = dbService().start();
-app.use(express.static(path.join(__dirname, '../public')));
 const Models = require('./models/index');
 const FeedbackModel = Models.clientFeedbacks
 const ItemModel = Models.items
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static(path.join(__dirname, '../public')));
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+app.use(passport.initialize());
+app.use(passport.session());
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+passport.use(new GoogleStrategy({
+ clientID: '268356325427-p6nrol1dp5pqm2np42bf78dtvb8or9uc.apps.googleusercontent.com',
+ clientSecret: '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',
+ callbackURL: "https://sample-project-ejs.onrender.com/auth/google/callback"
+  },
+ function(accessToken, refreshToken, profile, done) {
+ userProfile=profile;
+ return done(null, userProfile);
+  }
+));
+app.use(sessions({
+  secret: "secret",
+  saveUninitialized:true,
+  cookie: { maxAge: oneDay },
+  resave: false
+ }));
 app.use((err, req, res, next) => {
  if (err && err.error && err.error.isJoi) {
  const errDetail = [];
@@ -39,23 +60,15 @@ app.use((err, req, res, next) => {
     });
   }
 });
-app.use(sessions({
- secret: "secret",
- saveUninitialized:true,
- cookie: { maxAge: oneDay },
- resave: false
-}));
-const passport = require('passport');
+
+
 var userProfile;
 
-app.use(passport.initialize());
-app.use(passport.session());
 let feedback = [
   {name:"Ankit Joshi", feedback: "My First website!!", image: 'https://lh3.googleusercontent.com/a/AGNmyxZgZARrA6EcEsHtCt3JkGMIYRHjvM83HYDPAiHUpw=s96-c'}
 ]
 let feedback_message
-app.set('view engine', 'ejs');
-app.set('views', 'views');
+
 app.get('/success', async (req, res) =>{
  await FeedbackModel.create({ name: userProfile.displayName, email: userProfile.emails[0].value, image: userProfile.photos[0].value, feedback: feedback_message });
  feedback_message = null;
@@ -69,7 +82,6 @@ app.get('/error', (req, res) => res.send("error logging in"));
 passport.serializeUser(function(user, cb) {
  cb(null, user);
 });
-
 passport.deserializeUser(function(obj, cb) {
  cb(null, obj);
 });
@@ -171,17 +183,6 @@ res.redirect("dashboard/items");
  next()
   }
 };
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-passport.use(new GoogleStrategy({
- clientID: '268356325427-p6nrol1dp5pqm2np42bf78dtvb8or9uc.apps.googleusercontent.com',
- clientSecret: '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',
- callbackURL: "https://sample-project-ejs.onrender.com/auth/google/callback"
-  },
- function(accessToken, refreshToken, profile, done) {
- userProfile=profile;
- return done(null, userProfile);
-  }
-));
 app.get('/add-client-comment', (req, res) => {
   feedback_message = req.query.comment;
   res.redirect('/auth/google');
