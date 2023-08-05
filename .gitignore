@@ -1,1 +1,6 @@
 package-lock.json
+
+# Local Netlify folder
+.netlify
+node_modules/
+package-lock.json
