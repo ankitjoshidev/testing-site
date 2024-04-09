@@ -173,9 +173,9 @@ res.redirect("dashboard/items");
 };
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 passport.use(new GoogleStrategy({
- clientID: '268356325427-p6nrol1dp5pqm2np42bf78dtvb8or9uc.apps.googleusercontent.com',
- clientSecret: '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',
- callbackURL: "https://sample-project-ejs.onrender.com/auth/google/callback"
+ clientID: process.env.clientID,
+ clientSecret: process.env.clientSecret,
+ callbackURL: process.env.callbackUrl
   },
  function(accessToken, refreshToken, profile, done) {
  userProfile=profile;
